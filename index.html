@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GenAI Analyzer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+</script>
+
+  <style>
+    body {
+  overflow-y: auto;
+}
+    
+    /* 🔥 FADE ANIMATION */
+.fade {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 15px;
+  background: linear-gradient(45deg, #38bdf8, #0ea5e9);
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(56,189,248,0.4);
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(56,189,248,0.6);
+}
+
+/* INPUT FOCUS EFFECT */
+input:focus, textarea:focus {
+  border: 1px solid #38bdf8;
+  box-shadow: 0 0 5px #38bdf8;
+}
+    /* LOGIN UI UPGRADE */
+
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.login-container {
+  display: flex;
+  width: 800px;
+  height: 400px;
+  background: #1e293b;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Left Side */
+.login-left {
+  flex: 1;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 30px;
+}
+
+.login-left h1 {
+  font-size: 28px;
+}
+
+.login-left p {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Right Side */
+.login-right {
+  flex: 1;
+  padding: 40px;
+  text-align: center;
+}
+
+.login-right h2 {
+  margin-bottom: 20px;
+}
+
+.login-right input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #0f172a;
+  color: white;
+}
+
+/* Button */
+.login-right button {
+  width: 95%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Switch text */
+.switch {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.switch span {
+  color: #38bdf8;
+  cursor: pointer;
+  font-weight: bold;
+}
+    body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: white;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border-right: 1px solid #1e293b;
+}
+
+.sidebar h2 {
+  color: #38bdf8;
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.sidebar button:hover {
+  background: rgba(56,189,248,0.1);
+  color: #38bdf8;
+  padding-left: 18px;
+}
+
+.main {
+  flex: 1;
+  padding: 40px;
+  background: radial-gradient(circle at top right, #0ea5e9 0%, #020617 60%);
+}
+
+/* CARD */
+.card {
+  background: rgba(30, 41, 59, 0.7);
+  padding: 25px;
+  border-radius: 15px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(56,189,248,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* TEXTAREA */
+textarea {
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+}
+
+/* BUTTON */
+button {
+  padding: 10px 20px;
+  margin-top: 15px;
+  background: linear-gradient(45deg, #38bdf8, #0ea5e9);
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  color: black;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* AUTH PAGES */
+.auth {
+  text-align: center;
+  margin-top: 120px;
+}
+
+input {
+  padding: 12px;
+  margin: 10px;
+  width: 260px;
+  border-radius: 8px;
+  border: none;
+  .stats {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.stats div {
+  flex: 1;
+  background: #020617;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #1e293b;
+}
+#gradeResult {
+  margin-top: 15px;
+  padding: 15px;
+  background: #020617;
+  border-radius: 12px;
+  border-left: 4px solid #38bdf8;
+}
+}
+  </style>
+</head>
+
+<body>
+
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="auth">
+
+  <div class="login-container">
+    
+    <div class="login-left">
+      <h1>GenAI Analyzer 🚀</h1>
+      <p>Analyze, Simplify & Understand Text using AI</p>
+    </div>
+
+    <div class="login-right">
+      <h2>Welcome Back 👋</h2>
+      <p id="loginError" style="color:red; font-size:13px;"></p>
+
+      <input id="loginEmail" placeholder="Email">
+      <input id="loginPassword" type="password" placeholder="Password">
+
+      <button onclick="login()">Login</button>
+
+      <p class="switch">
+        New user? <span onclick="showSignup()">Create account</span>
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="auth" style="display:none;">
+
+  <div class="login-container">
+
+    <!-- LEFT SIDE -->
+    <div class="login-left">
+      <h1>Join GenAI 🚀</h1>
+      <p>Create your account and start analyzing text with AI</p>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="login-right">
+      <h2>Create Account ✨</h2>
+      <p id="signupError" style="color:red; font-size:13px;"></p>
+
+      <input id="name" placeholder="Full Name">
+      <input id="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+
+      <button onclick="signup()">Signup</button>
+
+      <p class="switch">
+        Already have an account? <span onclick="showLogin()">Login</span>
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DASHBOARD -->
+<div id="homePage" style="display:none;">
+  <div class="container">
+
+    <!-- SIDEBAR -->
+   <div class="sidebar">
+  <h2>GenAI</h2>
+
+  <button onclick="showAbout()">About</button>
+  <button onclick="showDashboard()">Dashboard</button>
+  <button onclick="showHistory()">History</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+    <!-- MAIN -->
+   <div class="main">
+
+  <!-- ✅ DASHBOARD -->
+  <div id="dashboardSection" class="fade">
+
+  <h1>Welcome <span id="username"></span> 👋</h1>
+
+  <!-- 🔥 FLEX LAYOUT -->
+  <div style="display:flex; gap:30px; margin-top:20px; align-items:flex-start;">
+
+    <!-- LEFT IMAGE -->
+    <div style="flex:1; text-align:center;">
+      <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+           style="width:250px; height:250px; object-fit:cover; border-radius:20px;">
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div style="flex:2;">
+
+      <div class="card">
+
+        <h2 style="font-size:22px;">🧠 AI Cognitive Analyzer</h2>
+        <p style="color:#94a3b8;">
+          Analyze your text, measure complexity & simplify instantly
+        </p>
+
+        <!-- FILE UPLOAD -->
+        <label style="
+          display:block;
+          padding:10px;
+          background:#1e293b;
+          border-radius:8px;
+          cursor:pointer;
+          margin-top:10px;">
+          📂 Upload Text File
+          <input type="file" id="fileInput" accept=".txt,.pdf" hidden onchange="uploadFile()">
+        </label>
+        
+<label style="margin-top:10px; display:block;">📘 Select Subject</label>
+
+<select id="subject" style="
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  margin-top:5px;
+  background:#1e293b;
+  color:white;
+">
+  <option value="English">English</option>
+  <option value="Maths">Maths</option>
+  <option value="Science">Science</option>
+  <option value="Computer Science">Computer Science</option>
+</select>
+
+        <!-- INPUT -->
+        <!-- 🔥 TABS -->
+<div class="tabs">
+  <button onclick="showTab('textTab')">✍️ Text</button>
+  <button onclick="showTab('cameraTab')">📷 Camera</button>
+  <button onclick="showTab('voiceTab')">🎤 Voice</button>
+</div>
+
+<!-- TEXT TAB -->
+<div id="textTab" class="tabContent">
+  <textarea id="inputText" rows="5" placeholder="Enter text..."></textarea>
+</div>
+
+<!-- CAMERA TAB -->
+<div id="cameraTab" class="tabContent" style="display:none;">
+  <button onclick="startCamera()">📷 Open Camera</button><br>
+  <video id="video" width="250" height="200" autoplay></video><br>
+  <button onclick="captureImage()">📸 Capture</button>
+</div>
+
+<!-- VOICE TAB -->
+<div id="voiceTab" class="tabContent" style="display:none;">
+  <button onclick="startVoice()">🎤 Start Speaking</button>
+</div>
+        <br>
+
+        <button onclick="analyzeText()">Analyze</button>
+
+        <!-- ✅ SINGLE RESULT BOX -->
+        <div class="result" id="resultBox" style="display:none;">
+
+          <p>📊 Words: <span id="wordCount"></span></p>
+          <p>📊 Sentences: <span id="sentenceCount"></span></p>
+          <p>⚡ Load: <span id="load"></span></p>
+          <p>📘 Subject: <span id="subjectResult"></span></p>
+
+          <h3>✨ Simplified</h3>
+          <p id="simplifiedText"></p>
+
+          <h3>🤖 AI Feedback</h3>
+          <p id="aiResponse"></p>
+
+          <!-- CHART -->
+          <h3>📊 Analysis Chart</h3>
+          <canvas id="myChart" height="100"></canvas>
+
+        </div>
+
+        <!-- SEPARATOR -->
+        <hr style="margin:20px 0;">
+
+        <!-- 🎓 GRADE ANALYZER -->
+        <h2>🎓 Student Grade Analyzer</h2>
+
+        <input type="text" id="studentName" placeholder="Enter Student Name"><br>
+        <input type="number" id="studentMarks" placeholder="Enter Marks (0-100)"><br>
+
+        <button onclick="checkGrade()">Check Grade</button>
+
+        <div id="gradeResult" style="margin-top:15px;"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div id="aboutSection" class="fade" style="display:none;">
+
+  <!-- HERO -->
+  <h1 style="font-size:32px;">About GenAI Analyzer 🚀</h1>
+
+<img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485"
+     style="width:250px; height:250px; object-fit:cover; border-radius:15px;">
+  <!-- INTRO -->
+  <div class="card">
+    <h2>Who We Are</h2>
+    <p style="color:#94a3b8;">
+      GenAI Analyzer is an intelligent web application designed to simplify complex text,
+      analyze cognitive load, and provide meaningful insights using AI-inspired logic.
+    </p>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="card">
+    <h2>What We Offer</h2>
+
+    <p>🔹 <b>Text Analysis:</b> Measure words, sentences, and complexity.</p>
+    <p>🔹 <b>AI Simplification:</b> Convert complex text into simple language.</p>
+    <p>🔹 <b>Sentiment Detection:</b> Identify tone (positive / negative).</p>
+    <p>🔹 <b>Student Grade Analyzer:</b> Smart feedback based on performance.</p>
+    <p>🔹 <b>History Tracking:</b> Store and review past analyses.</p>
+  </div>
+
+  <!-- MISSION -->
+  <div class="card">
+    <h2>Our Mission 🎯</h2>
+    <p style="color:#94a3b8;">
+      Our goal is to make information easier to understand by combining
+      artificial intelligence with simple user-friendly design.
+      We aim to help students, professionals, and learners improve clarity and productivity.
+    </p>
+  </div>
+
+  <!-- WHY THIS PROJECT -->
+  <div class="card">
+    <h2>Why This Project?</h2>
+    <p style="color:#94a3b8;">
+      This project was built to demonstrate how AI can assist in everyday tasks like
+      reading, writing, and analyzing text. It focuses on both functionality and user experience.
+    </p>
+  </div>
+
+  <!-- CTA -->
+  <div class="card" style="text-align:center;">
+    <h2>Start Exploring 🔍</h2>
+    <p>Try the analyzer and experience AI-powered text insights.</p>
+
+    <button onclick="showDashboard()">Go to Analyzer →</button>
+  </div>
+
+</div>
+
+  <!-- ✅ HISTORY SECTION -->
+  <div id="historySection" class="fade" style="display:none;">
+  <h1>History 📜</h1>
+
+  <button onclick="clearHistory()" style="background:red; color:white;">
+    Clear History ❌
+  </button>
+
+  <div class="card">
+    <div id="historyList"></div>
+  </div>
+</div>
+
+</div>
+    </div>
+  </div>
+
+</div> <!-- ✅ THIS closes .main -->
+
+<script>
+  function showSignup() {
+    loginPage.style.display = "none";
+    signupPage.style.display = "block";
+  }
+
+  function showLogin() {
+    signupPage.style.display = "none";
+    loginPage.style.display = "block";
+  }
+
+  function signup() {
+  let name = document.getElementById("name").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let password = document.getElementById("password").value.trim();
+
+  let error = document.getElementById("signupError");
+
+  // Validation
+  if (name === "" || email === "" || password === "") {
+    error.innerText = "⚠️ All fields are required!";
+    return;
+  }
+
+  if (!email.includes("@")) {
+    error.innerText = "⚠️ Enter valid email!";
+    return;
+  }
+
+  if (password.length < 6) {
+    error.innerText = "⚠️ Password must be at least 6 characters!";
+    return;
+  }
+
+  // Save user
+  localStorage.setItem("user", JSON.stringify({ name, email, password }));
+
+  error.style.color = "lightgreen";
+  error.innerText = "✅ Signup successful!";
+
+  setTimeout(() => {
+    showLogin();
+    error.innerText = "";
+  }, 1500);
+}
+
+function login() {
+  let email = document.getElementById("loginEmail").value.trim();
+  let password = document.getElementById("loginPassword").value.trim();
+
+  let error = document.getElementById("loginError");
+
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if (email === "" || password === "") {
+    error.innerText = "⚠️ Fill all fields!";
+    return;
+  }
+
+  if (user && user.email === email && user.password === password) {
+    loginPage.style.display = "none";
+    homePage.style.display = "block";
+    username.innerText = user.name;
+
+    error.innerText = "";
+  } else {
+    error.innerText = "❌ Invalid email or password!";
+  }
+}
+
+  function logout() {
+    homePage.style.display = "none";
+    loginPage.style.display = "block";
+  }
+
+ function analyzeText() {
+  let subject = document.getElementById("subject").value;
+  let text = document.getElementById("inputText").value;
+
+  if (text.trim() === "") {
+    alert("Please enter or upload text!");
+    return;
+  }
+
+  let words = text.split(" ").filter(w => w);
+  let sentences = text.split(/[.!?]/).filter(s => s.trim());
+
+  let load = "Low";
+  if (words.length > 20) load = "Medium";
+  if (words.length > 40) load = "High";
+
+  let simplified = text
+    .replace(/utilize/g, "use")
+    .replace(/approximately/g, "about")
+    .replace(/individuals/g, "people");
+
+  document.getElementById("wordCount").innerText = words.length;
+
+// ✅ FIX: hide sentence count for Maths
+if (subject === "Maths") {
+  document.getElementById("sentenceCount").innerText = "N/A";
+} else {
+  document.getElementById("sentenceCount").innerText = sentences.length;
+}
+
+document.getElementById("load").innerText = load;
+document.getElementById("subjectResult").innerText = subject;
+document.getElementById("simplifiedText").innerText = simplified;
+
+  let aiResponse = "";
+
+  // ✅ FIXED MATH LOGIC (safe instead of raw eval)
+  if (subject === "Maths") {
+    try {
+      let result = Function("return " + text)();
+      aiResponse = "🧮 Answer: " + result;
+    } catch {
+      aiResponse = "⚠️ Invalid Math Expression";
+    }
+  } else {
+    aiResponse = "✨ Simplified explanation generated for " + subject;
+  }
+
+  document.getElementById("aiResponse").innerHTML = aiResponse;
+  document.getElementById("resultBox").style.display = "block";
+
+  // CHART (same logic as yours)
+  let ctx = document.getElementById("myChart").getContext("2d");
+
+  if (window.myChartObj) {
+    window.myChartObj.destroy();
+  }
+
+  window.myChartObj = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Words", "Sentences"],
+      datasets: [{
+        label: "Analysis",
+        data: [words.length, sentences.length]
+      }]
+    }
+  });
+
+  // ✅ FIX: history storage (you had but ensure safe)
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+
+  history.push({
+    text,
+    words: words.length,
+    sentences: sentences.length,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("history", JSON.stringify(history));
+}
+  function showAbout() {
+  document.getElementById("dashboardSection").style.display = "none";
+  document.getElementById("historySection").style.display = "none";
+  document.getElementById("aboutSection").style.display = "block";
+}
+
+function showDashboard() {
+  document.getElementById("aboutSection").style.display = "none";
+  document.getElementById("historySection").style.display = "none";
+  document.getElementById("dashboardSection").style.display = "block";
+
+  let user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    document.getElementById("username").innerText = user.name;
+  }
+}
+
+function showHistory() {
+  document.getElementById("dashboardSection").style.display = "none";
+  document.getElementById("aboutSection").style.display = "none";
+  document.getElementById("historySection").style.display = "block";
+
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+  let output = "";
+
+  history.reverse().forEach(item => {
+    output += `
+  <div style="
+    margin-bottom:15px;
+    padding:15px;
+    background:#020617;
+    border-radius:12px;
+    border-left:4px solid #38bdf8;
+  ">
+    <p><b>📝 Text:</b> ${item.text}</p>
+    <p>📊 Words: ${item.words} | Sentences: ${item.sentences}</p>
+    <p style="color:#38bdf8;">🕒 ${item.time}</p>
+  </div>
+`;
+  });
+
+  document.getElementById("historyList").innerHTML = output;
+}
+
+function showDashboard() {
+  document.getElementById("aboutSection").style.display = "none";
+  document.getElementById("historySection").style.display = "none";
+  document.getElementById("dashboardSection").style.display = "block";
+
+  // restore username
+  let user = JSON.parse(localStorage.getItem("user"));
+  document.getElementById("username").innerText = user.name;
+}
+  function clearHistory() {
+  localStorage.removeItem("history");
+  document.getElementById("historyList").innerHTML = "<p>No history available</p>";
+}
+function uploadFile() {
+  let file = document.getElementById("fileInput").files[0];
+
+  if (!file) return;
+
+  let fileType = file.type;
+
+  // TEXT FILE
+  if (fileType === "text/plain") {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("inputText").value = e.target.result;
+    };
+    reader.readAsText(file);
+  }
+
+  // PDF FILE
+  else if (fileType === "application/pdf") {
+    let reader = new FileReader();
+
+    reader.onload = function(e) {
+      let typedarray = new Uint8Array(e.target.result);
+
+      pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+        let text = "";
+
+        let pages = [];
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          pages.push(
+            pdf.getPage(i).then(function(page) {
+              return page.getTextContent().then(function(content) {
+                let pageText = content.items.map(item => item.str).join(" ");
+                text += pageText + "\n";
+              });
+            })
+          );
+        }
+
+        Promise.all(pages).then(function() {
+          document.getElementById("inputText").value = text;
+        });
+      });
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
+  else {
+    alert("Only TXT or PDF allowed!");
+  }
+}
+function checkGrade() {
+  let name = document.getElementById("studentName").value;
+  let marks = document.getElementById("studentMarks").value;
+
+  if (name === "" || marks === "") {
+    alert("Enter all fields!");
+    return;
+  }
+
+  marks = parseInt(marks);
+
+  let grade = "";
+  let message = "";
+
+  if (marks >= 90) {
+    grade = "A";
+    message = "Excellent performance!";
+  } else if (marks >= 75) {
+    grade = "B";
+    message = "Good job!";
+  } else if (marks >= 50) {
+    grade = "C";
+    message = "Need improvement.";
+  } else {
+    grade = "D";
+    message = "Work harder.";
+  }
+
+  document.getElementById("gradeResult").innerHTML = `
+    <div style="background:#020617; padding:15px; border-radius:10px;">
+      <h3>${name}</h3>
+      <p>Marks: ${marks}</p>
+      <p>Grade: <b>${grade}</b></p>
+      <p>${message}</p>
+    </div>
+  `;
+}
+let video = document.getElementById("video");
+let captureBtn = document.getElementById("captureBtn");
+
+function startCamera() {
+  video.style.display = "block";
+  captureBtn.style.display = "inline-block";
+
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      video.srcObject = stream;
+    })
+    .catch(err => {
+      alert("Camera access denied!");
+    });
+}
+
+function captureImage() {
+  let canvas = document.getElementById("canvas");
+  let ctx = canvas.getContext("2d");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  ctx.drawImage(video, 0, 0);
+
+  // Stop camera
+  video.srcObject.getTracks().forEach(track => track.stop());
+
+  video.style.display = "none";
+  captureBtn.style.display = "none";
+
+  // OCR
+  Tesseract.recognize(canvas, 'eng')
+    .then(result => {
+      let text = result.data.text;
+
+      document.getElementById("inputText").value = text;
+
+      alert("✅ Text extracted!");
+    });
+}
+function startVoice() {
+  let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+  recognition.lang = "en-US";
+  recognition.start();
+
+  recognition.onstart = function() {
+    document.getElementById("aiResponse").innerText = "🎤 Listening...";
+  };
+
+  recognition.onresult = function(event) {
+    let speechText = event.results[0][0].transcript;
+
+    document.getElementById("inputText").value = speechText;
+
+    // Optional: auto analyze
+    analyzeText();
+  };
+
+  recognition.onerror = function() {
+    alert("❌ Voice recognition error");
+  };
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2/dist/tesseract.min.js"></script>
+
+</body>
+</html>
